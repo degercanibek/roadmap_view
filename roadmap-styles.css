@@ -1,0 +1,219 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    padding: 20px;
+}
+
+.language-switcher {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    max-width: 1200px;
+    margin: 0 auto 15px;
+}
+
+.lang-btn {
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.lang-btn:hover {
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.lang-btn.active {
+    border-color: #2563eb;
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    box-shadow: 0 3px 6px rgba(37, 99, 235, 0.2);
+}
+
+h1 {
+    text-align: center;
+    color: #2a3f54;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
+.roadmap-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 15px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.roadmap-section {
+    flex: 0 0 auto;
+    min-width: 0;
+}
+
+/* Width classes for sections - Fixed widths */
+.roadmap-section.width-xsmall {
+    width: 150px;
+}
+
+.roadmap-section.width-small {
+    width: 220px;
+}
+
+.roadmap-section.width-medium {
+    width: 300px;
+}
+
+.roadmap-section.width-large {
+    width: 400px;
+}
+
+.roadmap-section.width-xlarge {
+    width: 500px;
+}
+
+.section-header {
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.9em;
+    padding: 8px;
+    border-radius: 6px 6px 0 0;
+    color: white;
+    margin-bottom: 0;
+}
+
+.short-term .section-header {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+}
+
+.mid-term .section-header {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+}
+
+.long-term .section-header {
+    background: linear-gradient(135deg, #93c5fd, #60a5fa);
+}
+
+.milestones-list {
+    background: #fff;
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 4px;
+}
+
+.milestone-item {
+    padding: 14px 16px;
+    margin: 8px;
+    border-radius: 6px;
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+}
+
+.milestone-item:hover {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transform: translateY(-1px);
+}
+
+.milestone-item:last-child {
+    margin-bottom: 8px;
+}
+
+.milestone-item.highlighted {
+    padding-left: 11px;
+    position: relative;
+}
+
+.milestone-item.highlighted::before {
+    content: '◉';
+    position: absolute;
+    right: 10px;
+    top: 12px;
+    font-size: 1.3em;
+    line-height: 1;
+}
+
+.short-term .milestone-item.highlighted {
+    border-left: 4px solid #2563eb;
+    background: #eff6ff;
+}
+
+.short-term .milestone-item.highlighted::before {
+    color: #2563eb;
+}
+
+.mid-term .milestone-item.highlighted {
+    border-left: 4px solid #60a5fa;
+    background: #f0f9ff;
+}
+
+.mid-term .milestone-item.highlighted::before {
+    color: #60a5fa;
+}
+
+.long-term .milestone-item.highlighted {
+    border-left: 4px solid #93c5fd;
+    background: #f5faff;
+}
+
+.long-term .milestone-item.highlighted::before {
+    color: #93c5fd;
+}
+
+.milestone-item.highlighted .milestone-description {
+    font-weight: 500;
+    color: #333;
+}
+
+.milestone-date {
+    font-weight: bold;
+    font-size: 0.85em;
+    margin-bottom: 4px;
+}
+
+.short-term .milestone-date {
+    color: #1e40af;
+}
+
+.mid-term .milestone-date {
+    color: #3b82f6;
+}
+
+.long-term .milestone-date {
+    color: #60a5fa;
+}
+
+.milestone-description {
+    color: #555;
+    font-size: 0.85em;
+    line-height: 1.4;
+}
+
+/* Highlighted text within descriptions */
+.milestone-description .highlight {
+    font-weight: 700;
+}
+
+.short-term .milestone-description .highlight {
+    color: #1e40af;
+}
+
+.mid-term .milestone-description .highlight {
+    color: #3b82f6;
+}
+
+.long-term .milestone-description .highlight {
+    color: #60a5fa;
+}
