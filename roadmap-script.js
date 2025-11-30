@@ -295,24 +295,13 @@ async function exportData() {
 }
 
 // Import data from JSON file
-function importData(isFirstTime = false) {
+function importData() {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'application/json,.json';
     input.onchange = async (e) => {
         const file = e.target.files[0];
-        if (!file) {
-            if (isFirstTime) {
-                // If cancelled on first visit, use default data
-                const defaultData = await loadDefaultData();
-                if (defaultData) {
-                    saveData(defaultData);
-                    localStorage.setItem('roadmapInitialized', 'true');
-                    await loadRoadmap();
-                }
-            }
-            return;
-        }
+        if (!file) return;
         
         try {
             const text = await file.text();
@@ -329,20 +318,13 @@ function importData(isFirstTime = false) {
     input.click();
 }
 
-// Show first time import dialog
+// Show first time import - just load default data
 async function showFirstTimeImport() {
-    const shouldImport = confirm('Welcome! Would you like to import a roadmap JSON file?\n\nClick OK to import, or Cancel to use default data.');
-    
-    if (shouldImport) {
-        importData(true);
-    } else {
-        // Use default data
-        const defaultData = await loadDefaultData();
-        if (defaultData) {
-            saveData(defaultData);
-            localStorage.setItem('roadmapInitialized', 'true');
-            await loadRoadmap();
-        }
+    const defaultData = await loadDefaultData();
+    if (defaultData) {
+        saveData(defaultData);
+        localStorage.setItem('roadmapInitialized', 'true');
+        await loadRoadmap();
     }
 }
 
@@ -367,7 +349,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Export/Import buttons
     document.getElementById('export-btn').addEventListener('click', exportData);
-    document.getElementById('import-btn').addEventListener('click', () => importData(false));
+    document.getElementById('import-btn').addEventListener('click', importData);
     
     // Modal events
     document.querySelector('.close').addEventListener('click', closeModal);
