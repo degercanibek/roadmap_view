@@ -1,0 +1,104 @@
+{
+  "title": {
+    "tr": "Lojistik Ürün Direktörlüğü Yol Haritası",
+    "en": "Logistics Products Directorate Roadmap"
+  },
+  "sections": [
+    {
+      "id": "short-term",
+      "title": {
+        "tr": "Kısa Vade (0-3 ay)",
+        "en": "Short-Term (0-3 months)"
+      },
+      "width": "medium",
+      "milestones": [
+        {
+          "date": {
+            "tr": "Ocak 2026",
+            "en": "January 2026"
+          },
+          "description": {
+            "tr": "**İstanbul pilot acentelerde** Sungur Portal'ın canlıya geçişi",
+            "en": "Go-live of Sungur Portal at **Istanbul pilot agencies**"
+          },
+          "highlighted": true
+        },
+        {
+          "date": {
+            "tr": "Ocak 2026",
+            "en": "January 2026"
+          },
+          "description": {
+            "tr": "ResAI - Mail AI geliştirmelerinin tamamlanması",
+            "en": "Development Completion of ResAI - Mail AI"
+          },
+          "highlighted": false
+        }
+      ]
+    },
+    {
+      "id": "mid-term",
+      "title": {
+        "tr": "Orta Vade (3-12 ay)",
+        "en": "Mid-Term (3-12 months)"
+      },
+      "width": "medium",
+      "milestones": [
+        {
+          "date": {
+            "tr": "Mart 2026",
+            "en": "March 2026"
+          },
+          "description": {
+            "tr": "ResAI - Voice AI geliştirmelerinin tamamlanması",
+            "en": "ResAI - Voice AI Development Completion"
+          },
+          "highlighted": false
+        },
+        {
+          "date": {
+            "tr": "Nisan 2026",
+            "en": "April 2026"
+          },
+          "description": {
+            "tr": "Sungur Portal'ın **tüm acentelerde yaygınlaştırmasının tamamlanması**",
+            "en": "Full **roll-out completion** of Sungur Portal across all agencies"
+          },
+          "highlighted": true
+        }
+      ]
+    },
+    {
+      "id": "long-term",
+      "title": {
+        "tr": "Uzun Vade (12+ ay)",
+        "en": "Long-Term (12+ months)"
+      },
+      "width": "medium",
+      "milestones": [
+        {
+          "date": {
+            "tr": "2027 Q2",
+            "en": "2027 Q2"
+          },
+          "description": {
+            "tr": "Satış Modülünün tamamlanması",
+            "en": "Completion of Sales Module"
+          },
+          "highlighted": true
+        },
+        {
+          "date": {
+            "tr": "2027 Q2",
+            "en": "2027 Q2"
+          },
+          "description": {
+            "tr": "**Terminal Operasyonları & Kargo Gelir Muhasebe** modülü geliştirmelerine başlanması",
+            "en": "Start of development for **Terminal Operations & Cargo Revenue Accounting Module**"
+          },
+          "highlighted": true
+        }
+      ]
+    }
+  ]
+}

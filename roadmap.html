@@ -8,15 +8,56 @@
 </head>
 <body>
 
-    <div class="language-switcher">
-        <button class="lang-btn active" data-lang="tr" title="Türkçe">🇹🇷</button>
-        <button class="lang-btn" data-lang="en" title="English">🇬🇧</button>
+    <div class="top-controls">
+        <div class="language-switcher">
+            <button class="lang-btn active" data-lang="tr" title="Türkçe">🇹🇷</button>
+            <button class="lang-btn" data-lang="en" title="English">🇬🇧</button>
+        </div>
+        <div class="edit-controls-top">
+            <button id="import-btn" class="import-btn" title="Import JSON">📥 Import</button>
+            <button id="export-btn" class="export-btn" title="Export JSON">📤 Export</button>
+            <button id="edit-mode-btn" class="edit-mode-btn">✏️ Edit</button>
+        </div>
     </div>
 
     <h1 id="page-title">Directorate Roadmap</h1>
 
     <div class="roadmap-container" id="roadmap-container">
         <!-- Content will be dynamically generated from JavaScript -->
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title">Edit Milestone</h2>
+            <form id="milestone-form">
+                <input type="hidden" id="edit-section-id">
+                <input type="hidden" id="edit-milestone-index">
+                
+                <label>Date (TR):</label>
+                <input type="text" id="date-tr" required>
+                
+                <label>Date (EN):</label>
+                <input type="text" id="date-en" required>
+                
+                <label>Description (TR):</label>
+                <textarea id="desc-tr" rows="3" required></textarea>
+                
+                <label>Description (EN):</label>
+                <textarea id="desc-en" rows="3" required></textarea>
+                
+                <label>
+                    <input type="checkbox" id="highlighted">
+                    Highlighted
+                </label>
+                
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-save">Save</button>
+                    <button type="button" class="btn-cancel">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script src="roadmap-script.js"></script>

@@ -11,12 +11,22 @@ body {
     padding: 20px;
 }
 
-.language-switcher {
+.top-controls {
     display: flex;
-    justify-content: flex-end;
-    gap: 8px;
+    justify-content: space-between;
+    align-items: center;
     max-width: 1200px;
     margin: 0 auto 15px;
+}
+
+.language-switcher {
+    display: flex;
+    gap: 8px;
+}
+
+.edit-controls-top {
+    display: flex;
+    gap: 8px;
 }
 
 .lang-btn {
@@ -40,6 +50,58 @@ body {
     border-color: #2563eb;
     background: linear-gradient(135deg, #eff6ff, #dbeafe);
     box-shadow: 0 3px 6px rgba(37, 99, 235, 0.2);
+}
+
+.edit-mode-btn {
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.edit-mode-btn:hover {
+    background: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.edit-mode-btn.active {
+    background: #ef4444;
+}
+
+.edit-mode-btn.active:hover {
+    background: #dc2626;
+}
+
+.import-btn, .export-btn {
+    background: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.import-btn:hover, .export-btn:hover {
+    background: #4f46e5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.export-btn {
+    background: #8b5cf6;
+}
+
+.export-btn:hover {
+    background: #7c3aed;
 }
 
 h1 {
@@ -216,4 +278,154 @@ h1 {
 
 .long-term .milestone-description .highlight {
     color: #60a5fa;
+}
+
+/* Edit mode styles */
+body.edit-mode .milestone-item {
+    position: relative;
+    padding-right: 100px;
+}
+
+.edit-controls {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    gap: 5px;
+}
+
+body.edit-mode .edit-controls {
+    display: flex;
+}
+
+.btn-edit, .btn-delete, .btn-add {
+    padding: 4px 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8em;
+    transition: all 0.2s ease;
+}
+
+.btn-edit {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-edit:hover {
+    background: #2563eb;
+}
+
+.btn-delete {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-delete:hover {
+    background: #dc2626;
+}
+
+.btn-add {
+    background: #10b981;
+    color: white;
+    margin: 8px;
+    width: calc(100% - 16px);
+}
+
+.btn-add:hover {
+    background: #059669;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal.show {
+    display: block;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 20px;
+}
+
+.close:hover {
+    color: #000;
+}
+
+#milestone-form label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+#milestone-form input[type="text"],
+#milestone-form textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: inherit;
+}
+
+#milestone-form input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-save, .btn-cancel {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.btn-save {
+    background: #10b981;
+    color: white;
+}
+
+.btn-save:hover {
+    background: #059669;
+}
+
+.btn-cancel {
+    background: #6b7280;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background: #4b5563;
 }

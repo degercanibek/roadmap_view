@@ -18,111 +18,44 @@
 
 // Current language (default: tr)
 let currentLanguage = 'tr';
+let editMode = false;
+let defaultRoadmapData = null;
 
-const roadmapData = {
-  "title": {
-    "tr": "Direktörlük Yol Haritası",
-    "en": "Directorate Roadmap"
-  },
-  "sections": [
-    {
-      "id": "short-term",
-      "title": {
-        "tr": "Kısa Vade (0-3 ay)",
-        "en": "Short-Term (0-3 months)"
-      },
-      "width": "medium",
-      "milestones": [
-        {
-          "date": {
-            "tr": "Ocak 2026",
-            "en": "January 2026"
-          },
-          "description": {
-            "tr": "**İstanbul pilot acentelerde** Sungur Portal'ın canlıya geçişi",
-            "en": "Go-live of Sungur Portal at **Istanbul pilot agencies**"
-          },
-          "highlighted": true
-        },
-        {
-          "date": {
-            "tr": "Ocak 2026",
-            "en": "January 2026"
-          },
-          "description": {
-            "tr": "ResAI - Mail AI geliştirmelerinin tamamlanması",
-            "en": "Development Completion of ResAI - Mail AI"
-          },
-          "highlighted": false
-        }
-      ]
-    },
-    {
-      "id": "mid-term",
-      "title": {
-        "tr": "Orta Vade (3-12 ay)",
-        "en": "Mid-Term (3-12 months)"
-      },
-      "width": "medium",
-      "milestones": [
-        {
-          "date": {
-            "tr": "Mart 2026",
-            "en": "March 2026"
-          },
-          "description": {
-            "tr": "ResAI - Voice AI geliştirmelerinin tamamlanması",
-            "en": "ResAI - Voice AI Development Completion"
-          },
-          "highlighted": false
-        },
-        {
-          "date": {
-            "tr": "Nisan 2026",
-            "en": "April 2026"
-          },
-          "description": {
-            "tr": "Sungur Portal'ın **tüm acentelerde yaygınlaştırmasının tamamlanması**",
-            "en": "Full **roll-out completion** of Sungur Portal across all agencies"
-          },
-          "highlighted": true
-        }
-      ]
-    },
-    {
-      "id": "long-term",
-      "title": {
-        "tr": "Uzun Vade (12+ ay)",
-        "en": "Long-Term (12+ months)"
-      },
-      "width": "medium",
-      "milestones": [
-        {
-          "date": {
-            "tr": "2027 Q2",
-            "en": "2027 Q2"
-          },
-          "description": {
-            "tr": "Satış Modülünün tamamlanması",
-            "en": "Completion of Sales Module"
-          },
-          "highlighted": true
-        },
-        {
-          "date": {
-            "tr": "2027 Q2",
-            "en": "2027 Q2"
-          },
-          "description": {
-            "tr": "**Terminal Operasyonları & Kargo Gelir Muhasebe** modülü geliştirmelerine başlanması",
-            "en": "Start of development for **Terminal Operations & Cargo Revenue Accounting Module**"
-          },
-          "highlighted": true
-        }
-      ]
+// Check if first time visit
+function isFirstVisit() {
+    return !localStorage.getItem('roadmapData') && !localStorage.getItem('roadmapInitialized');
+}
+
+// Load default data from JSON file
+async function loadDefaultData() {
+    try {
+        const response = await fetch('roadmap-data.json');
+        defaultRoadmapData = await response.json();
+        return defaultRoadmapData;
+    } catch (error) {
+        console.error('Error loading default data:', error);
+        return null;
     }
-  ]
-};
+}
+
+// Load data from localStorage or JSON file
+async function loadData() {
+    const savedData = localStorage.getItem('roadmapData');
+    if (savedData) {
+        return JSON.parse(savedData);
+    }
+    
+    // Load from JSON file
+    if (!defaultRoadmapData) {
+        await loadDefaultData();
+    }
+    return defaultRoadmapData;
+}
+
+// Save data to localStorage
+function saveData(data) {
+    localStorage.setItem('roadmapData', JSON.stringify(data));
+}
 
 // Get text in current language
 function getText(textObj) {
@@ -137,9 +70,9 @@ function formatText(text, sectionClass) {
 }
 
 // Load and render roadmap from embedded data
-function loadRoadmap() {
+async function loadRoadmap() {
     try {
-        const data = roadmapData;
+        const data = await loadData();
         
         // Set page title
         document.getElementById('page-title').textContent = getText(data.title);
@@ -186,10 +119,41 @@ function loadRoadmap() {
                 
                 milestoneItem.appendChild(dateDiv);
                 milestoneItem.appendChild(descDiv);
+                
+                // Add edit controls if in edit mode
+                if (editMode) {
+                    const editControls = document.createElement('div');
+                    editControls.className = 'edit-controls';
+                    
+                    const editBtn = document.createElement('button');
+                    editBtn.className = 'btn-edit';
+                    editBtn.textContent = 'Edit';
+                    editBtn.onclick = () => openEditModal(section.id, section.milestones.indexOf(milestone));
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'btn-delete';
+                    deleteBtn.textContent = 'Delete';
+                    deleteBtn.onclick = () => deleteMilestone(section.id, section.milestones.indexOf(milestone));
+                    
+                    editControls.appendChild(editBtn);
+                    editControls.appendChild(deleteBtn);
+                    milestoneItem.appendChild(editControls);
+                }
+                
                 milestonesList.appendChild(milestoneItem);
             });
             
             sectionDiv.appendChild(milestonesList);
+            
+            // Add "Add New" button in edit mode
+            if (editMode) {
+                const addBtn = document.createElement('button');
+                addBtn.className = 'btn-add';
+                addBtn.textContent = '+ Add Milestone';
+                addBtn.onclick = () => openAddModal(section.id);
+                milestonesList.appendChild(addBtn);
+            }
+            
             container.appendChild(sectionDiv);
         });
     } catch (error) {
@@ -200,9 +164,9 @@ function loadRoadmap() {
 }
 
 // Change language
-function changeLanguage(lang) {
+async function changeLanguage(lang) {
     currentLanguage = lang;
-    loadRoadmap();
+    await loadRoadmap();
     
     // Update active button
     document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -211,14 +175,210 @@ function changeLanguage(lang) {
     document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active');
 }
 
+// Toggle edit mode
+async function toggleEditMode() {
+    editMode = !editMode;
+    document.body.classList.toggle('edit-mode', editMode);
+    const btn = document.getElementById('edit-mode-btn');
+    if (editMode) {
+        btn.textContent = '✓ Done';
+        btn.classList.add('active');
+    } else {
+        btn.textContent = '✏️ Edit';
+        btn.classList.remove('active');
+    }
+    await loadRoadmap();
+}
+
+// Open modal to edit milestone
+async function openEditModal(sectionId, milestoneIndex) {
+    const data = await loadData();
+    const section = data.sections.find(s => s.id === sectionId);
+    const milestone = section.milestones[milestoneIndex];
+    
+    document.getElementById('modal-title').textContent = 'Edit Milestone';
+    document.getElementById('edit-section-id').value = sectionId;
+    document.getElementById('edit-milestone-index').value = milestoneIndex;
+    document.getElementById('date-tr').value = milestone.date.tr;
+    document.getElementById('date-en').value = milestone.date.en;
+    document.getElementById('desc-tr').value = milestone.description.tr;
+    document.getElementById('desc-en').value = milestone.description.en;
+    document.getElementById('highlighted').checked = milestone.highlighted;
+    
+    document.getElementById('edit-modal').classList.add('show');
+}
+
+// Open modal to add new milestone
+function openAddModal(sectionId) {
+    document.getElementById('modal-title').textContent = 'Add New Milestone';
+    document.getElementById('edit-section-id').value = sectionId;
+    document.getElementById('edit-milestone-index').value = '-1';
+    document.getElementById('date-tr').value = '';
+    document.getElementById('date-en').value = '';
+    document.getElementById('desc-tr').value = '';
+    document.getElementById('desc-en').value = '';
+    document.getElementById('highlighted').checked = false;
+    
+    document.getElementById('edit-modal').classList.add('show');
+}
+
+// Close modal
+function closeModal() {
+    document.getElementById('edit-modal').classList.remove('show');
+}
+
+// Save milestone
+async function saveMilestone(event) {
+    event.preventDefault();
+    
+    const data = await loadData();
+    const sectionId = document.getElementById('edit-section-id').value;
+    const milestoneIndex = parseInt(document.getElementById('edit-milestone-index').value);
+    const section = data.sections.find(s => s.id === sectionId);
+    
+    const milestone = {
+        date: {
+            tr: document.getElementById('date-tr').value,
+            en: document.getElementById('date-en').value
+        },
+        description: {
+            tr: document.getElementById('desc-tr').value,
+            en: document.getElementById('desc-en').value
+        },
+        highlighted: document.getElementById('highlighted').checked
+    };
+    
+    if (milestoneIndex === -1) {
+        // Add new
+        section.milestones.push(milestone);
+    } else {
+        // Edit existing
+        section.milestones[milestoneIndex] = milestone;
+    }
+    
+    saveData(data);
+    closeModal();
+    await loadRoadmap();
+}
+
+// Delete milestone
+async function deleteMilestone(sectionId, milestoneIndex) {
+    if (!confirm('Are you sure you want to delete this milestone?')) return;
+    
+    const data = await loadData();
+    const section = data.sections.find(s => s.id === sectionId);
+    section.milestones.splice(milestoneIndex, 1);
+    saveData(data);
+    await loadRoadmap();
+}
+
+// Export data to JSON file
+async function exportData() {
+    const data = await loadData();
+    
+    // Ask for filename
+    const filename = prompt('Enter filename:', 'roadmap-data.json');
+    if (!filename) return;
+    
+    const dataStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename.endsWith('.json') ? filename : filename + '.json';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    alert('File downloaded! Please save it to your project folder.');
+}
+
+// Import data from JSON file
+function importData(isFirstTime = false) {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json,.json';
+    input.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) {
+            if (isFirstTime) {
+                // If cancelled on first visit, use default data
+                const defaultData = await loadDefaultData();
+                if (defaultData) {
+                    saveData(defaultData);
+                    localStorage.setItem('roadmapInitialized', 'true');
+                    await loadRoadmap();
+                }
+            }
+            return;
+        }
+        
+        try {
+            const text = await file.text();
+            const data = JSON.parse(text);
+            saveData(data);
+            localStorage.setItem('roadmapInitialized', 'true');
+            await loadRoadmap();
+            alert('Data imported successfully!');
+        } catch (error) {
+            console.error('Error importing data:', error);
+            alert('Error importing data. Please check the file format.');
+        }
+    };
+    input.click();
+}
+
+// Show first time import dialog
+async function showFirstTimeImport() {
+    const shouldImport = confirm('Welcome! Would you like to import a roadmap JSON file?\n\nClick OK to import, or Cancel to use default data.');
+    
+    if (shouldImport) {
+        importData(true);
+    } else {
+        // Use default data
+        const defaultData = await loadDefaultData();
+        if (defaultData) {
+            saveData(defaultData);
+            localStorage.setItem('roadmapInitialized', 'true');
+            await loadRoadmap();
+        }
+    }
+}
+
 // Load roadmap when page loads
-document.addEventListener('DOMContentLoaded', () => {
-    loadRoadmap();
+document.addEventListener('DOMContentLoaded', async () => {
+    // Check if first visit
+    if (isFirstVisit()) {
+        await showFirstTimeImport();
+    } else {
+        await loadRoadmap();
+    }
     
     // Add language switcher event listeners
     document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             changeLanguage(btn.dataset.lang);
         });
+    });
+    
+    // Edit mode button
+    document.getElementById('edit-mode-btn').addEventListener('click', toggleEditMode);
+    
+    // Export/Import buttons
+    document.getElementById('export-btn').addEventListener('click', exportData);
+    document.getElementById('import-btn').addEventListener('click', () => importData(false));
+    
+    // Modal events
+    document.querySelector('.close').addEventListener('click', closeModal);
+    document.querySelector('.btn-cancel').addEventListener('click', closeModal);
+    document.getElementById('milestone-form').addEventListener('submit', saveMilestone);
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', (event) => {
+        const modal = document.getElementById('edit-modal');
+        if (event.target === modal) {
+            closeModal();
+        }
     });
 });
