@@ -83,11 +83,33 @@ function isFirstVisit() {
 async function loadDefaultData() {
     try {
         const response = await fetch('roadmap-data.json');
+        if (!response.ok) {
+            // If file doesn't exist, return null instead of empty structure
+            return null;
+        }
         defaultRoadmapData = await response.json();
         return defaultRoadmapData;
     } catch (error) {
-        console.error('Error loading default data:', error);
-        // Return empty default structure if file doesn't exist
+        console.log('No default data file found. Starting with empty roadmap.');
+        // Return null if file doesn't exist - let user start fresh
+        return null;
+    }
+}
+
+// Load data from localStorage or JSON file
+async function loadData() {
+    const savedData = localStorage.getItem('roadmapData');
+    if (savedData) {
+        return JSON.parse(savedData);
+    }
+    
+    // Load from JSON file
+    if (!defaultRoadmapData) {
+        await loadDefaultData();
+    }
+    
+    // If still no data, return empty structure
+    if (!defaultRoadmapData) {
         return {
             title: {
                 tr: "Yol Haritası",
@@ -124,19 +146,7 @@ async function loadDefaultData() {
             ]
         };
     }
-}
-
-// Load data from localStorage or JSON file
-async function loadData() {
-    const savedData = localStorage.getItem('roadmapData');
-    if (savedData) {
-        return JSON.parse(savedData);
-    }
     
-    // Load from JSON file
-    if (!defaultRoadmapData) {
-        await loadDefaultData();
-    }
     return defaultRoadmapData;
 }
 
@@ -562,8 +572,14 @@ function importData() {
 // Show first time import - just load default data
 async function showFirstTimeImport() {
     const defaultData = await loadDefaultData();
-    if (defaultData) {
+    // Only save if JSON file exists and has data
+    if (defaultData && defaultData.sections) {
         saveData(defaultData);
+        localStorage.setItem('roadmapInitialized', 'true');
+        await loadRoadmap();
+    } else {
+        // No JSON file - start with empty roadmap
+        console.log('Starting with empty roadmap');
         localStorage.setItem('roadmapInitialized', 'true');
         await loadRoadmap();
     }
