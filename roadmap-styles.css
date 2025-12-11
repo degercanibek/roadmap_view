@@ -265,12 +265,48 @@ body {
     margin-bottom: 8px;
 }
 
-.milestone-item.highlighted {
+.milestone-item.highlighted .milestone-description {
+    font-weight: 500;
+    color: #333;
+}
+
+/* Milestone Header - Date and Product */
+.milestone-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+}
+
+.milestone-date {
+    display: flex;
+    align-items: center;
+}
+
+/* Product Badges */
+.product-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    color: white;
+    background: linear-gradient(135deg, var(--color-short-term) 0%, var(--color-mid-term) 100%);
+    opacity: 0.9;
+}
+
+/* RAG Status Styles - Independent of theme colors */
+.milestone-item.rag-green,
+.milestone-item.rag-amber,
+.milestone-item.rag-red {
     padding-left: 11px;
     position: relative;
 }
 
-.milestone-item.highlighted::before {
+.milestone-item.rag-green::before,
+.milestone-item.rag-amber::before,
+.milestone-item.rag-red::before {
     content: '◉';
     position: absolute;
     right: 10px;
@@ -279,42 +315,39 @@ body {
     line-height: 1;
 }
 
-.short-term .milestone-item.highlighted {
-    border-left: 4px solid var(--color-short-term);
-    background: rgba(227, 10, 23, 0.05);
+.milestone-item.rag-green {
+    border-left: 4px solid #22c55e;
+    background: #f0fdf4;
 }
 
-.short-term .milestone-item.highlighted::before {
-    color: var(--color-short-term);
+.milestone-item.rag-green::before {
+    color: #22c55e;
 }
 
-.mid-term .milestone-item.highlighted {
-    border-left: 4px solid var(--color-mid-term);
-    background: rgba(240, 78, 90, 0.05);
+.milestone-item.rag-amber {
+    border-left: 4px solid #f59e0b;
+    background: #fffbeb;
 }
 
-.mid-term .milestone-item.highlighted::before {
-    color: var(--color-mid-term);
+.milestone-item.rag-amber::before {
+    color: #f59e0b;
 }
 
-.long-term .milestone-item.highlighted {
-    border-left: 4px solid var(--color-long-term);
-    background: rgba(247, 146, 152, 0.05);
+.milestone-item.rag-red {
+    border-left: 4px solid #ef4444;
+    background: #fef2f2;
 }
 
-.long-term .milestone-item.highlighted::before {
-    color: var(--color-long-term);
-}
-
-.milestone-item.highlighted .milestone-description {
-    font-weight: 500;
-    color: #333;
+.milestone-item.rag-red::before {
+    color: #ef4444;
 }
 
 .milestone-date {
+    display: flex;
+    align-items: center;
     font-weight: bold;
     font-size: var(--font-size-date);
-    margin-bottom: 4px;
+    margin-bottom: 0;
 }
 
 .short-term .milestone-date {

@@ -87,7 +87,42 @@ async function loadDefaultData() {
         return defaultRoadmapData;
     } catch (error) {
         console.error('Error loading default data:', error);
-        return null;
+        // Return empty default structure if file doesn't exist
+        return {
+            title: {
+                tr: "Yol Haritası",
+                en: "Roadmap"
+            },
+            sections: [
+                {
+                    id: "short-term",
+                    title: {
+                        tr: "Kısa Vade (0-3 ay)",
+                        en: "Short-Term (0-3 months)"
+                    },
+                    width: "medium",
+                    milestones: []
+                },
+                {
+                    id: "mid-term",
+                    title: {
+                        tr: "Orta Vade (3-12 ay)",
+                        en: "Mid-Term (3-12 months)"
+                    },
+                    width: "medium",
+                    milestones: []
+                },
+                {
+                    id: "long-term",
+                    title: {
+                        tr: "Uzun Vade (12+ ay)",
+                        en: "Long-Term (12+ months)"
+                    },
+                    width: "medium",
+                    milestones: []
+                }
+            ]
+        };
     }
 }
 
@@ -254,19 +289,35 @@ async function loadRoadmap() {
             section.milestones.forEach(milestone => {
                 const milestoneItem = document.createElement('div');
                 milestoneItem.className = 'milestone-item';
-                if (milestone.highlighted) {
-                    milestoneItem.classList.add('highlighted');
+                
+                // Add RAG status class
+                const ragStatus = milestone.ragStatus || 'none';
+                if (ragStatus !== 'none') {
+                    milestoneItem.classList.add(`rag-${ragStatus}`);
                 }
+                
+                // Date and Product container
+                const headerContainer = document.createElement('div');
+                headerContainer.className = 'milestone-header';
                 
                 const dateDiv = document.createElement('div');
                 dateDiv.className = 'milestone-date';
                 dateDiv.textContent = getText(milestone.date);
+                headerContainer.appendChild(dateDiv);
+                
+                // Add product badge if exists
+                if (milestone.product && milestone.product.trim() !== '') {
+                    const productBadge = document.createElement('span');
+                    productBadge.className = 'product-badge';
+                    productBadge.textContent = milestone.product;
+                    headerContainer.appendChild(productBadge);
+                }
                 
                 const descDiv = document.createElement('div');
                 descDiv.className = 'milestone-description';
                 descDiv.innerHTML = formatText(getText(milestone.description), section.id);
                 
-                milestoneItem.appendChild(dateDiv);
+                milestoneItem.appendChild(headerContainer);
                 milestoneItem.appendChild(descDiv);
                 
                 // Add edit controls if in edit mode
@@ -390,7 +441,8 @@ async function openEditModal(sectionId, milestoneIndex) {
     document.getElementById('date-en').value = milestone.date.en;
     document.getElementById('desc-tr').value = milestone.description.tr;
     document.getElementById('desc-en').value = milestone.description.en;
-    document.getElementById('highlighted').checked = milestone.highlighted;
+    document.getElementById('product').value = milestone.product || '';
+    document.getElementById('rag-status').value = milestone.ragStatus || 'none';
     
     document.getElementById('edit-modal').classList.add('show');
 }
@@ -404,7 +456,8 @@ function openAddModal(sectionId) {
     document.getElementById('date-en').value = '';
     document.getElementById('desc-tr').value = '';
     document.getElementById('desc-en').value = '';
-    document.getElementById('highlighted').checked = false;
+    document.getElementById('product').value = '';
+    document.getElementById('rag-status').value = 'none';
     
     document.getElementById('edit-modal').classList.add('show');
 }
@@ -432,7 +485,8 @@ async function saveMilestone(event) {
             tr: document.getElementById('desc-tr').value,
             en: document.getElementById('desc-en').value
         },
-        highlighted: document.getElementById('highlighted').checked
+        product: document.getElementById('product').value,
+        ragStatus: document.getElementById('rag-status').value
     };
     
     if (milestoneIndex === -1) {

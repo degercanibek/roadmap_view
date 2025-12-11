@@ -61,10 +61,16 @@
                 <label>Description (EN):</label>
                 <textarea id="desc-en" rows="3" required></textarea>
                 
-                <label>
-                    <input type="checkbox" id="highlighted">
-                    Highlighted
-                </label>
+                <label for="product">Product Name:</label>
+                <input type="text" id="product" placeholder="e.g., Sungur Portal, ResAI">
+                
+                <label for="rag-status">RAG Status:</label>
+                <select id="rag-status">
+                    <option value="none">No Status</option>
+                    <option value="green">🟢 Green (On Track)</option>
+                    <option value="amber">🟡 Amber (At Risk)</option>
+                    <option value="red">🔴 Red (Off Track)</option>
+                </select>
                 
                 <div class="modal-buttons">
                     <button type="submit" class="btn-save">Save</button>
